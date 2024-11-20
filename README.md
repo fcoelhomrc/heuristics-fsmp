@@ -17,7 +17,7 @@ The objective functions are defined in terms of some set of metrics computed ove
 Some interesting datasets:
 - [Letter Recognition](https://huggingface.co/datasets/pittawat/letter_recognition)
 - [Beans](https://huggingface.co/datasets/AI-Lab-Makerere/beans)
-- [Brain Tumors](https://huggingface.co/datasets/sartajbhuvaji/Brain-Tumor-Classification)
+- [Brain Tumors](https://huggingface.co/datasets/benschill/brain-tumor-collection)
 - [Cifar100](https://huggingface.co/datasets/uoft-cs/cifar100)
 - [Cats v.s. Dogs](https://huggingface.co/datasets/microsoft/cats_vs_dogs)
 - [Chest X-Rays](https://huggingface.co/datasets/AiresPucrs/chest-xray)
