@@ -142,6 +142,7 @@ terminado==0.18.1
 threadpoolctl==3.5.0
 tinycss2==1.4.0
 tokenizers==0.20.3
+toml==0.10.2
 torch==2.5.1
 torchaudio==2.5.1
 torchvision==0.20.1
