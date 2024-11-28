@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.datasets import load_breast_cancer
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from metaheuristics import brkga, fitness_functions, problems
+from metaheuristics import brkga, problems
 
 
 def main():
@@ -37,7 +37,7 @@ def main():
     }
 
     # define the feature selection problem
-    problem = problems.FeatureSelectionProblem(X, y, fitness_functions.accuracy)
+    problem = problems.FeatureSelectionProblem(X, y, fitness_function="accuracy")
 
     res = brkga.run_algorithm(
         problem=problem,

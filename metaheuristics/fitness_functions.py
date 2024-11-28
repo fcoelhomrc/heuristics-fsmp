@@ -6,13 +6,14 @@ from sklearn.metrics import accuracy_score
 from sklearn.base import BaseEstimator
 
 
-def accuracy(
-        selected_features:np.ndarray,
-        X:np.ndarray,
-        y:np.ndarray,
-        classifier:BaseEstimator=None
-    ) -> float:
-    """Fitness function for BRKGA. Evaluates model accuracy on selected features."""
+def execute(
+    metric:str,
+    selected_features:np.ndarray,
+    X:np.ndarray,
+    y:np.ndarray,
+    classifier:BaseEstimator=None
+) -> float:
+    """Fitness function for BRKGA. Evaluates model on selected features."""
 
     if selected_features.shape[0] == 0:
         return float("inf") # return a high penalty fitness if no features are selected
@@ -26,4 +27,7 @@ def accuracy(
 
     y_pred = classifier.predict(X_test)
 
-    return -accuracy_score(y_test, y_pred)  # pymoo minimizes, so return negative accuracy
+    if metric == "accuracy":
+        return -accuracy_score(y_test, y_pred)  # pymoo minimizes, so return negative accuracy
+    else:
+        return None
