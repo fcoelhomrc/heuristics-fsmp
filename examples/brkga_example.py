@@ -54,6 +54,11 @@ def main():
     print("Number of selected features:", len(selected_features))
     print("Selected features:", selected_features)
 
+    # algorithm history
+    n_evals = np.array([e.evaluator.n_eval for e in res.history]) # corresponding number of function evaluations
+    opt = np.array([e.opt[0].F for e in res.history]) # the objective space values in each generation
+    print("n_evals:", n_evals)
+    print("opt:", opt)
 
 if __name__ == "__main__":
     main()
