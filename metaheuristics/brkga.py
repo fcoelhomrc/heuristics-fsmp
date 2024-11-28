@@ -17,7 +17,8 @@ def run_algorithm(problem:type[ElementwiseProblem], algorithm_params:dict, optim
         algorithm,
         termination=("n_gen", optimization_params["n_gen"]),
         seed=1,
-        verbose=False
+        verbose=False,
+        save_history=True
     )
 
     return res
