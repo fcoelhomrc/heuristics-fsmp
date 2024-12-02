@@ -3,10 +3,11 @@ import numpy as np
 from pymoo.core.problem import ElementwiseProblem
 from pymoo.core.duplicate import ElementwiseDuplicateElimination
 
+from metaheuristics import fitness_functions
 
 class FeatureSelectionProblem(ElementwiseProblem):
 
-    def __init__(self, X, y, fitness_function):
+    def __init__(self, X, y, fitness_function, classifier=None):
         super().__init__(
             n_var=X.shape[1],   # dimension of the problem
             n_obj=1,            # number of objective functions
@@ -17,10 +18,17 @@ class FeatureSelectionProblem(ElementwiseProblem):
         self.X = X
         self.y = y
         self.fitness_function = fitness_function
+        self.classifier = classifier
 
     def _evaluate(self, x, out, *args, **kwargs):
         selected_features = np.where(x > 0.5)[0] # threshold for binary choice
-        out["F"] = self.fitness_function(selected_features, self.X, self.y)  # objective value
+        out["F"] = fitness_functions.execute(
+            self.fitness_function,
+            selected_features,
+            self.X,
+            self.y,
+            self.classifier
+        )  # objective value
 
 
 class MyElementwiseDuplicateElimination(ElementwiseDuplicateElimination):
