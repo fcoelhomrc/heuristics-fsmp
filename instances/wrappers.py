@@ -2,7 +2,7 @@ from datasets import load_dataset
 import torch
 from torch.utils.data import DataLoader, random_split
 import torchvision.transforms as transforms
-
+from torchvision.transforms.v2 import RGB
 
 def get_dataset(name, batch_size):
     """
@@ -79,7 +79,7 @@ def _brain_tumor(batch_size, validation_percent=0.20):
     ])
 
     label_pipeline = transforms.Compose([
-        transforms.Lambda(lambda x: torch.tensor(x, dtype=torch.int8)),
+        transforms.Lambda(lambda x: torch.tensor(x, dtype=torch.uint8)),
     ])
 
     def pre_processing(examples):
@@ -137,10 +137,12 @@ def _cats_and_dogs(batch_size, validation_percent=0.15, test_percent=0.20):
     image_pipeline = transforms.Compose([
         transforms.Resize((512, 512)),
         transforms.ToTensor(),
+        RGB(),
+        transforms.Lambda(lambda x: x[:3] if x.shape[0] > 3 else x),
     ])
 
     label_pipeline = transforms.Compose([
-        transforms.Lambda(lambda x: torch.tensor(x, dtype=torch.int8)),
+        transforms.Lambda(lambda x: torch.tensor(x, dtype=torch.uint8)),
     ])
 
     def pre_processing(examples):
