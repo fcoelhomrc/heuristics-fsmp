@@ -5,11 +5,10 @@ import time
 import numpy as np
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from instances import wrappers, models
-from metaheuristics import brkga
+from metaheuristics import brkga, evaluation
 
 
 with open("examples/config.toml", "r") as f:
@@ -94,31 +93,21 @@ def main():
     X_features_test = np.vstack(all_features_test)  # (total_samples, n_features_model)
     y_test = np.concatenate(all_labels_test)  # (total_samples,)
 
-    # overview - number of features
-    print(f"\nAll features: X_train shape: {X_features_train.shape}, X_test shape: {X_features_test.shape}")
-    X_features_train_opt = np.take(X_features_train, selected_features, axis=1)
-    X_features_test_opt = np.take(X_features_test, selected_features, axis=1)
-    print(f"Selected features: X_train shape: {X_features_train_opt.shape}, X_test shape: {X_features_test_opt.shape}")
- 
-    # classifier using all features
-    clf_full = RandomForestClassifier()
-    clf_full.fit(X_features_train, y_train)
-    y_pred_proba_full = clf_full.predict_proba(X_features_test)
-    y_pred_full = clf_full.predict(X_features_test)
+    # compare performances - all features vs selected features
+    clf_all = RandomForestClassifier() # classifier using all features
+    clf_selected = RandomForestClassifier() # classifier using selected features
 
-    # classifier using selected features
-    clf_opt = RandomForestClassifier()
-    clf_opt.fit(X_features_train_opt, y_train)
-    y_pred_proba_opt = clf_opt.predict_proba(X_features_test_opt)
-    y_pred_opt = clf_opt.predict(X_features_test_opt)
+    ev = evaluation.Evaluator(
+        X_features_train, y_train,
+        X_features_test, y_test,
+        selected_features, config["metrics"]
+    )
 
-    # results - test set
+    results = ev.compare_using_fit(clf_all, clf_selected)
+
     print("\nTest set")
-    print(f"- Accuracy:\nAll features: {accuracy_score(y_test, y_pred_full)}\nSelected features: {accuracy_score(y_test, y_pred_opt)}")
-    print(f"- Precision:\nAll features: {precision_score(y_test, y_pred_full, average="macro")}\nSelected features: {precision_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- Recall:\nAll features: {recall_score(y_test, y_pred_full, average="macro")}\nSelected features: {recall_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- F1 Score:\nAll features: {f1_score(y_test, y_pred_full, average="macro")}\nSelected features: {f1_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- ROC AUC:\nAll features: {roc_auc_score(y_test, y_pred_proba_full, average="macro", multi_class="ovr")}\nSelected features: {roc_auc_score(y_test, y_pred_proba_opt, average="macro", multi_class="ovr")}")
+    print("all_features:", results["all_features"])
+    print("selected_features:", results["selected_features"])
 
 
 if __name__ == "__main__":

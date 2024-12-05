@@ -17,3 +17,8 @@ eliminate_duplicates = false # true or false
 [optimization]
 n_gen = 2
 fitness_function = "accuracy"
+
+[metrics]
+list = ["accuracy", "precision", "recall", "f1", "roc_auc"]
+average = "macro" # ["micro", "macro", "weighted", "none"]
+multi_class = "ovr" # ["ovr", "ovo"]
