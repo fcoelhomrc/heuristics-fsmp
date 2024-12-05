@@ -7,11 +7,12 @@ description = "resnet18" # ["resnet18", "resnet34", "resnet50", "resnet101", "re
 n_hidden = 128
 
 [brkga]
-n_elites = 100
-n_offsprings = 150 
-n_mutants = 50
+mode = "percent" # ["percent", "absolute"]
+n_elites = 0.25
+n_offsprings = 0.75
+n_mutants = 0.15
 bias = 0.7
-eliminate_duplicates = true # or false
+eliminate_duplicates = false # true or false
 
 [optimization]
 n_gen = 2

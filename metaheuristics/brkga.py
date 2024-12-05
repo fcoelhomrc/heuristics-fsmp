@@ -15,10 +15,19 @@ def run_algorithm(X:pd.DataFrame, y:pd.DataFrame, algorithm_params:dict, optimiz
     # define the feature selection problem
     problem = problems.FeatureSelectionProblem(X, y, optimization_params["fitness_function"])
 
-    algorithm_params["eliminate_duplicates"] = (problems.MyElementwiseDuplicateElimination()
-                                            if algorithm_params["eliminate_duplicates"] else None)
+    # brkga parameters
+    if algorithm_params["mode"] == "percent":
+        algorithm_params["n_elites"] = int(algorithm_params["n_elites"] * X.shape[1])
+        algorithm_params["n_offsprings"] = int(algorithm_params["n_offsprings"] * X.shape[1])
+        algorithm_params["n_mutants"] = int(algorithm_params["n_mutants"] * X.shape[1])
 
-    algorithm = BRKGA(**algorithm_params)
+    algorithm = BRKGA(
+        n_elites = algorithm_params["n_elites"],
+        n_offsprings = algorithm_params["n_offsprings"],
+        n_mutants = algorithm_params["n_mutants"],
+        bias = algorithm_params["bias"],
+        eliminate_duplicates = problems.MyElementwiseDuplicateElimination() if algorithm_params["eliminate_duplicates"] else None
+    )
 
     res = minimize(
         problem,
