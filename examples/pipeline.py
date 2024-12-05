@@ -15,6 +15,23 @@ with open("examples/config.toml", "r") as f:
     config = toml.load(f)
 
 
+def get_image_features(input_dataloader, model):
+
+    all_features = []
+    all_labels = []
+
+    for batch in input_dataloader:
+        image, label = batch["image"], batch["label"]
+        features = model.extract_features(image)
+
+        all_features.append(features.detach().cpu().numpy())
+        all_labels.append(label.detach().cpu().numpy())
+
+    X_features = np.vstack(all_features)  # (total_samples, n_features_model)
+    y = np.concatenate(all_labels)  # (total_samples,)
+
+    return X_features, y
+
 def main():
 
     start_time = time.time()
@@ -33,17 +50,7 @@ def main():
     )
 
     # get image features (training set)
-    all_features_train = []
-    all_labels_train = []
-    for batch in train:
-        image, label = batch["image"], batch["label"]
-        features = model.extract_features(image)
-
-        all_features_train.append(features.detach().cpu().numpy())
-        all_labels_train.append(label.detach().cpu().numpy())
-
-    X_features_train = np.vstack(all_features_train)  # (total_samples, n_features_model)
-    y_train = np.concatenate(all_labels_train)  # (total_samples,)
+    X_features_train, y_train = get_image_features(train, model)
 
     end_time_feature_extraction = time.time()
     feature_extraction_time = end_time_feature_extraction - start_time
@@ -81,17 +88,7 @@ def main():
     ########### check performance using the new subset of features
 
     # get image features (test set)
-    all_features_test = []
-    all_labels_test = []
-    for batch in test:
-        image, label = batch["image"], batch["label"]
-        features = model.extract_features(image)
-
-        all_features_test.append(features.detach().cpu().numpy())
-        all_labels_test.append(label.detach().cpu().numpy())
-
-    X_features_test = np.vstack(all_features_test)  # (total_samples, n_features_model)
-    y_test = np.concatenate(all_labels_test)  # (total_samples,)
+    X_features_test, y_test = get_image_features(test, model)
 
     # compare performances - all features vs selected features
     clf_all = RandomForestClassifier() # classifier using all features
