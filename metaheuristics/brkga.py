@@ -1,14 +1,22 @@
+import pandas as pd
 
-from pymoo.core.problem import ElementwiseProblem
 from pymoo.algorithms.soo.nonconvex.brkga import BRKGA
 from pymoo.optimize import minimize
+
+from metaheuristics import problems
 
 from pymoo.config import Config
 Config.warnings['not_compiled'] = False # disable warning
 
 
-def run_algorithm(problem:type[ElementwiseProblem], algorithm_params:dict, optimization_params:dict):
-    """Runs the BRKGA algorithm with the given problem and parameters."""
+def run_algorithm(X:pd.DataFrame, y:pd.DataFrame, algorithm_params:dict, optimization_params:dict):
+    """Define the problem and run the BRKGA algorithm with the given parameters."""
+
+    # define the feature selection problem
+    problem = problems.FeatureSelectionProblem(X, y, optimization_params["fitness_function"])
+
+    algorithm_params["eliminate_duplicates"] = (problems.MyElementwiseDuplicateElimination()
+                                            if algorithm_params["eliminate_duplicates"] else None)
 
     algorithm = BRKGA(**algorithm_params)
 

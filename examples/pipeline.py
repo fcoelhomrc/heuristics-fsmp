@@ -8,8 +8,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from metaheuristics import brkga, problems
 from instances import wrappers, models
+from metaheuristics import brkga
 
 
 with open("examples/config.toml", "r") as f:
@@ -50,17 +50,12 @@ def main():
     feature_extraction_time = end_time_feature_extraction - start_time
     print(f"Time spent on feature extraction: {feature_extraction_time:.2f} seconds (dataset: {config["dataset"]["description"]}, model: {config["model"]["description"]})")
 
-    # define the feature selection problem
-    problem = problems.FeatureSelectionProblem(X_features_train, y_train, config["optimization"]["fitness_function"])
-
     # run brkga
     start_time_brkga = time.time()
 
-    config["brkga"]["eliminate_duplicates"] = (problems.MyElementwiseDuplicateElimination()
-                                            if config["brkga"]["eliminate_duplicates"] else None)
-
     res = brkga.run_algorithm(
-        problem=problem,
+        X=X_features_train,
+        y=y_train,
         algorithm_params=config["brkga"],
         optimization_params=config["optimization"]
     )
@@ -76,7 +71,6 @@ def main():
 
     print(f"\nBest solution fitness: {best_solution_fitness[0]} (metric: {config["optimization"]["fitness_function"]})")
     print("Number of selected features:", len(selected_features))
-    # print("Selected features:", selected_features)
     print("Total number of features:", X_features_train.shape[1])
 
     # algorithm history
