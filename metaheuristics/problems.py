@@ -7,21 +7,22 @@ from metaheuristics import fitness_functions
 
 class FeatureSelectionProblem(ElementwiseProblem):
 
-    def __init__(self, X, y, fitness_function, classifier=None):
+    def __init__(self, X, y, fitness_function, threshold_decoding, classifier=None):
         super().__init__(
             n_var=X.shape[1],   # dimension of the problem
             n_obj=1,            # number of objective functions
             n_constr=0,         # unconstrained optimization problem
-            xl=0,               # lower bound
-            xu=1                # upper bound
+            xl=X.min(axis=0),   # lower bound
+            xu=X.max(axis=0)    # upper bound
         )
         self.X = X
         self.y = y
         self.fitness_function = fitness_function
+        self.threshold_decoding = threshold_decoding
         self.classifier = classifier
 
     def _evaluate(self, x, out, *args, **kwargs):
-        selected_features = np.where(x > 0.5)[0] # threshold for binary choice
+        selected_features = np.where(x > self.threshold_decoding)[0] # threshold for binary choice
         out["F"] = fitness_functions.execute(
             self.fitness_function,
             selected_features,

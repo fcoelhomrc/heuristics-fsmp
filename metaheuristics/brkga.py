@@ -13,7 +13,7 @@ def run_algorithm(X:pd.DataFrame, y:pd.DataFrame, algorithm_params:dict, optimiz
     """Define the problem and run the BRKGA algorithm with the given parameters."""
 
     # define the feature selection problem
-    problem = problems.FeatureSelectionProblem(X, y, optimization_params["fitness_function"])
+    problem = problems.FeatureSelectionProblem(X, y, optimization_params["fitness_function"], algorithm_params["threshold_decoding"])
 
     # brkga parameters
     if algorithm_params["mode"] == "percent":
