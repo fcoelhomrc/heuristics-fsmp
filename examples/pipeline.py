@@ -34,8 +34,6 @@ def get_image_features(input_dataloader, model):
 
 def main():
 
-    start_time = time.time()
-
     # load dataset
     train, validation, test, n_classes = wrappers.get_dataset(
         name=config["dataset"]["description"],
@@ -50,15 +48,14 @@ def main():
     )
 
     # get image features (training set)
+    start_time = time.time()
     X_features_train, y_train = get_image_features(train, model)
 
-    end_time_feature_extraction = time.time()
-    feature_extraction_time = end_time_feature_extraction - start_time
+    feature_extraction_time = time.time() - start_time
     print(f"Time spent on feature extraction: {feature_extraction_time:.2f} seconds (dataset: {config["dataset"]["description"]}, model: {config["model"]["description"]})")
 
     # run brkga
     start_time_brkga = time.time()
-
     res = brkga.run_algorithm(
         X=X_features_train,
         y=y_train,
@@ -66,24 +63,20 @@ def main():
         optimization_params=config["optimization"]
     )
 
-    end_time_brkga = time.time()
-    brkga_time = end_time_brkga - start_time_brkga
+    brkga_time = time.time() - start_time_brkga
     print(f"Time spent on BRKGA: {brkga_time:.2f} seconds (n_gen: {config["optimization"]["n_gen"]})")
 
     # brkga output
-    best_solution_fitness = res.F
     best_solution = np.array(res.X)
-    selected_features = np.where(best_solution > 0.5)[0] # threshold for binary
+    selected_features = np.where(best_solution > config["brkga"]["threshold_decoding"])[0] # threshold for binary
 
-    print(f"\nBest solution fitness: {best_solution_fitness[0]} (metric: {config["optimization"]["fitness_function"]})")
+    print(f"\nBest solution fitness: {res.F[0]} (metric: {config["optimization"]["fitness_function"]})")
     print("Number of selected features:", len(selected_features))
     print("Total number of features:", X_features_train.shape[1])
 
     # algorithm history
-    n_evals = np.array([e.evaluator.n_eval for e in res.history])
-    opt = np.array([e.opt[0].F for e in res.history])
-    print("Number of function evaluations:", n_evals)
-    print("Fitness history:", opt)
+    print("Number of function evaluations:", np.array([e.evaluator.n_eval for e in res.history]))
+    print("Fitness history:", np.array([e.opt[0].F for e in res.history]))
 
     ########### check performance using the new subset of features
 
@@ -101,10 +94,12 @@ def main():
     )
 
     results = ev.compare_using_fit(clf_all, clf_selected)
+    # results = ev.compare_using_grid_search_cv(clf_all, clf_selected, config["cross_validation"], config["random_forest"])
 
     print("\nTest set")
     print("all_features:", results["all_features"])
     print("selected_features:", results["selected_features"])
+    # print("best models:", results["best_models"])
 
 
 if __name__ == "__main__":
