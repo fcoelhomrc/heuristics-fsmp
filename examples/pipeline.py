@@ -7,7 +7,7 @@ import numpy as np
 
 from sklearn.ensemble import RandomForestClassifier
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from instances import wrappers, models
 from metaheuristics import brkga, evaluation
 
@@ -40,6 +40,15 @@ def get_image_features(input_dataloader, model):
     y = np.concatenate(all_labels)  # (total_samples,)
 
     return X_features, y
+
+def save_brkga_history_into_file(filename, res):
+    evaluations = np.array([e.evaluator.n_eval for e in res.history])
+    fitness_history = np.array([e.opt[0].F for e in res.history])
+
+    data = np.column_stack((evaluations, fitness_history)) # two arrays column-wise
+    np.savetxt(filename, data, delimiter=",", header="Number of function evaluations,Fitness history", comments="", fmt="%.6f")
+
+    logger.info("Fitness history saved to '%s'", filename)
 
 def main():
 
@@ -79,10 +88,9 @@ def main():
     best_solution = np.array(res.X)
     selected_features = np.where(best_solution > config["brkga"]["threshold_decoding"])[0] # threshold for binary
 
-    logger.info("Best solution fitness: %.4f (metric: %s)", res.F[0], config["optimization"]["fitness_function"])
-    logger.info("Number of selected features: %d out of %d", len(selected_features), X_features_train.shape[1])
-    # logger.info("Number of function evaluations: %s", np.array([e.evaluator.n_eval for e in res.history]))
-    # logger.info("Fitness history: %s", np.array([e.opt[0].F for e in res.history]))
+    logger.info("Best solution fitness: %.6f (metric: %s)", res.F[0], config["optimization"]["fitness_function"])
+    logger.info("Number of selected features: %d out of %d (binary threshold: %s)", len(selected_features), X_features_train.shape[1], config["brkga"]["threshold_decoding"])
+    save_brkga_history_into_file("./log/debug_history.csv", res)
 
     ########### check performance using the new subset of features
 
@@ -99,11 +107,9 @@ def main():
         selected_features, config["metrics"]
     )
     results = ev.compare_using_fit(clf_all, clf_selected)
-    # results = ev.compare_using_grid_search_cv(clf_all, clf_selected, config["cross_validation"], config["random_forest"])
 
     for metric in results["all_features"]:
-        logger.info("%s (test set): %.4f (all features) / %.4f (selected features)", metric, results["all_features"][metric], results["selected_features"][metric])
-    # print("best models:", results["best_models"])
+        logger.info("%s (test set): %.6f (all features) / %.6f (selected features)", metric, results["all_features"][metric], results["selected_features"][metric])
 
 
 if __name__ == "__main__":
