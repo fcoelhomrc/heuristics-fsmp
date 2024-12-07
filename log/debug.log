@@ -41,3 +41,20 @@
 2024-12-07 15:00:43 - recall (test set): 0.538391 (all features) / 0.499631 (selected features)
 2024-12-07 15:00:43 - f1 (test set): 0.536671 (all features) / 0.499794 (selected features)
 2024-12-07 15:00:43 - roc_auc (test set): 0.666518 (all features) / 0.655890 (selected features)
+2024-12-07 16:05:55 - -----------------------------------------
+2024-12-07 16:06:31 - Time spent on feature extraction: 32.26 seconds (dataset: beans, model: resnet18)
+2024-12-07 16:09:46 - Time spent on BRKGA: 194.73 seconds (n_gen: 5)
+2024-12-07 16:09:46 - Best solution fitness: -0.784530 (metric: accuracy)
+2024-12-07 16:09:46 - Number of selected features: 241 out of 512 (binary threshold: 0.5)
+2024-12-07 16:09:46 - Fitness history saved to './log/debug_history.csv'
+2024-12-07 16:09:53 - accuracy (test set): 0.492188 (all features) / 0.515625 (selected features)
+2024-12-07 16:09:53 - precision (test set): 0.489046 (all features) / 0.517389 (selected features)
+2024-12-07 16:09:53 - recall (test set): 0.491325 (all features) / 0.515319 (selected features)
+2024-12-07 16:09:53 - f1 (test set): 0.488941 (all features) / 0.515143 (selected features)
+2024-12-07 16:09:53 - roc_auc (test set): 0.674161 (all features) / 0.688977 (selected features)
+2024-12-07 16:09:53 - Randomly selected features have 109 (45.23%) in common with the selected features
+2024-12-07 16:09:55 - accuracy (test set): 0.492188 (all features) / 0.515625 (randomly selected features)
+2024-12-07 16:09:55 - precision (test set): 0.489046 (all features) / 0.527179 (randomly selected features)
+2024-12-07 16:09:55 - recall (test set): 0.491325 (all features) / 0.514950 (randomly selected features)
+2024-12-07 16:09:55 - f1 (test set): 0.488941 (all features) / 0.511999 (randomly selected features)
+2024-12-07 16:09:55 - roc_auc (test set): 0.674161 (all features) / 0.638140 (randomly selected features)
