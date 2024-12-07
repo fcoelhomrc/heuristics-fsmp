@@ -1,0 +1,10 @@
+2024-12-07 12:25:05 - -----------------------------------------
+2024-12-07 12:25:41 - Time spent on feature extraction: 31.97 seconds (dataset: beans, model: resnet18)
+2024-12-07 12:31:13 - Time spent on BRKGA: 331.61 seconds (n_gen: 2)
+2024-12-07 12:31:13 - Best solution fitness: -0.8011 (metric: accuracy)
+2024-12-07 12:31:13 - Number of selected features: 306 out of 512
+2024-12-07 12:31:19 - accuracy (test set): 0.5078 (all features) / 0.4766 (selected features)
+2024-12-07 12:31:19 - precision (test set): 0.5104 (all features) / 0.4821 (selected features)
+2024-12-07 12:31:19 - recall (test set): 0.5074 (all features) / 0.4760 (selected features)
+2024-12-07 12:31:19 - f1 (test set): 0.5065 (all features) / 0.4755 (selected features)
+2024-12-07 12:31:19 - roc_auc (test set): 0.6674 (all features) / 0.6825 (selected features)

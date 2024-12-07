@@ -1,7 +1,8 @@
 import os
 import sys
-import toml
 import time
+import logging
+import toml
 import numpy as np
 
 from sklearn.ensemble import RandomForestClassifier
@@ -11,6 +12,14 @@ from instances import wrappers, models
 from metaheuristics import brkga, evaluation
 
 
+# set up logging
+logging.basicConfig(
+    filename="./log/debug.log", level=logging.INFO,
+    format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger()
+
+# config file
 with open("examples/config.toml", "r") as f:
     config = toml.load(f)
 
@@ -52,7 +61,7 @@ def main():
     X_features_train, y_train = get_image_features(train, model)
 
     feature_extraction_time = time.time() - start_time
-    print(f"Time spent on feature extraction: {feature_extraction_time:.2f} seconds (dataset: {config["dataset"]["description"]}, model: {config["model"]["description"]})")
+    logger.info("Time spent on feature extraction: %.2f seconds (dataset: %s, model: %s)", feature_extraction_time, config["dataset"]["description"], config["model"]["description"])
 
     # run brkga
     start_time_brkga = time.time()
@@ -64,19 +73,16 @@ def main():
     )
 
     brkga_time = time.time() - start_time_brkga
-    print(f"Time spent on BRKGA: {brkga_time:.2f} seconds (n_gen: {config["optimization"]["n_gen"]})")
+    logger.info("Time spent on BRKGA: %.2f seconds (n_gen: %d)", brkga_time, config["optimization"]["n_gen"])
 
     # brkga output
     best_solution = np.array(res.X)
     selected_features = np.where(best_solution > config["brkga"]["threshold_decoding"])[0] # threshold for binary
 
-    print(f"\nBest solution fitness: {res.F[0]} (metric: {config["optimization"]["fitness_function"]})")
-    print("Number of selected features:", len(selected_features))
-    print("Total number of features:", X_features_train.shape[1])
-
-    # algorithm history
-    print("Number of function evaluations:", np.array([e.evaluator.n_eval for e in res.history]))
-    print("Fitness history:", np.array([e.opt[0].F for e in res.history]))
+    logger.info("Best solution fitness: %.4f (metric: %s)", res.F[0], config["optimization"]["fitness_function"])
+    logger.info("Number of selected features: %d out of %d", len(selected_features), X_features_train.shape[1])
+    # logger.info("Number of function evaluations: %s", np.array([e.evaluator.n_eval for e in res.history]))
+    # logger.info("Fitness history: %s", np.array([e.opt[0].F for e in res.history]))
 
     ########### check performance using the new subset of features
 
@@ -92,15 +98,14 @@ def main():
         X_features_test, y_test,
         selected_features, config["metrics"]
     )
-
     results = ev.compare_using_fit(clf_all, clf_selected)
     # results = ev.compare_using_grid_search_cv(clf_all, clf_selected, config["cross_validation"], config["random_forest"])
 
-    print("\nTest set")
-    print("all_features:", results["all_features"])
-    print("selected_features:", results["selected_features"])
+    for metric in results["all_features"]:
+        logger.info("%s (test set): %.4f (all features) / %.4f (selected features)", metric, results["all_features"][metric], results["selected_features"][metric])
     # print("best models:", results["best_models"])
 
 
 if __name__ == "__main__":
+    logger.info("-----------------------------------------")
     main()
