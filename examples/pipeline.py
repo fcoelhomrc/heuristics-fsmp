@@ -98,8 +98,8 @@ def main():
     X_features_test, y_test = get_image_features(test, model)
 
     # compare performances - all features vs selected features
-    clf_all = RandomForestClassifier() # classifier using all features
-    clf_selected = RandomForestClassifier() # classifier using selected features
+    clf_all = RandomForestClassifier(random_state=19) # classifier using all features
+    clf_selected = RandomForestClassifier(random_state=19) # classifier using selected features
 
     ev = evaluation.Evaluator(
         X_features_train, y_train,
