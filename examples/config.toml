@@ -11,14 +11,14 @@ n_hidden = 128
 [brkga]
 mode = "percent" # ["percent", "absolute"]
 n_elites = 0.25
-n_offsprings = 0.6
+n_offsprings = 0.85
 n_mutants = 0.15
 bias = 0.7
 eliminate_duplicates = false # true or false
-threshold_decoding = 0.4 # threshold for binary (select a feature or not)
+threshold_decoding = 0.3 # threshold for binary (select a feature or not)
 
 [optimization]
-n_gen = 2
+n_gen = 15
 fitness_function = "negative_log_likelihood" # ["negative_log_likelihood", "accuracy"]
 
 ##################################################################################
