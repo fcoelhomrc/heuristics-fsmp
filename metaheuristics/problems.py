@@ -12,8 +12,8 @@ class FeatureSelectionProblem(ElementwiseProblem):
             n_var=X.shape[1],   # dimension of the problem
             n_obj=1,            # number of objective functions
             n_constr=0,         # unconstrained optimization problem
-            xl=X.min(axis=0),   # lower bound
-            xu=X.max(axis=0)    # upper bound
+            xl=0,               # lower bound
+            xu=1                # upper bound
         )
         self.X = X
         self.y = y
