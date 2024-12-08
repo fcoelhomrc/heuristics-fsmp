@@ -2,10 +2,10 @@ import pandas as pd
 
 from pymoo.algorithms.soo.nonconvex.brkga import BRKGA
 from pymoo.optimize import minimize
+from pymoo.config import Config
 
 from metaheuristics import problems
 
-from pymoo.config import Config
 Config.warnings['not_compiled'] = False # disable warning
 
 
@@ -14,12 +14,6 @@ def run_algorithm(X:pd.DataFrame, y:pd.DataFrame, algorithm_params:dict, optimiz
 
     # define the feature selection problem
     problem = problems.FeatureSelectionProblem(X, y, optimization_params["fitness_function"], algorithm_params["threshold_decoding"])
-
-    # brkga parameters
-    if algorithm_params["mode"] == "percent":
-        algorithm_params["n_elites"] = int(algorithm_params["n_elites"] * X.shape[1])
-        algorithm_params["n_offsprings"] = int(algorithm_params["n_offsprings"] * X.shape[1])
-        algorithm_params["n_mutants"] = int(algorithm_params["n_mutants"] * X.shape[1])
 
     algorithm = BRKGA(
         n_elites = algorithm_params["n_elites"],

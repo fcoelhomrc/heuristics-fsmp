@@ -73,6 +73,14 @@ def main():
     logger.info("Time spent on feature extraction: %.2f seconds (dataset: %s, model: %s)", feature_extraction_time, config["dataset"]["description"], config["model"]["description"])
 
     # run brkga
+    if config["brkga"]["mode"] == "percent":
+        config["brkga"]["n_elites"] = int(config["brkga"]["n_elites"] * X_features_train.shape[1])
+        config["brkga"]["n_offsprings"] = int(config["brkga"]["n_offsprings"] * X_features_train.shape[1])
+        config["brkga"]["n_mutants"] = int(config["brkga"]["n_mutants"] * X_features_train.shape[1])
+
+    logger.info("BRKGA parameters: n_elites: %d / n_offsprings: %d / n_mutants: %d / bias: %.2f",
+                config["brkga"]["n_elites"], config["brkga"]["n_offsprings"], config["brkga"]["n_mutants"], config["brkga"]["bias"])
+
     start_time_brkga = time.time()
     res = brkga.run_algorithm(
         X=X_features_train,
