@@ -1,8 +1,12 @@
+import os
 from datasets import load_dataset
 import torch
 from torch.utils.data import DataLoader, random_split
 import torchvision.transforms as transforms
 from torchvision.transforms.v2 import RGB
+
+from instances.models import Classifier
+
 
 def get_dataset(name, batch_size):
     """
@@ -165,3 +169,57 @@ def _cats_and_dogs(batch_size, validation_percent=0.15, test_percent=0.20):
     loader_test = DataLoader(test_split, batch_size=batch_size)
 
     return loader_train, loader_validation, loader_test
+
+
+def _is_instance_valid(dataset, backbone, model_dir):
+    datasets = [
+        "letter_recognition",
+        "beans",
+        "brain_tumor",
+        "cifar",
+        "cats_and_dogs",
+    ]
+    backbones = [
+        "resnet18",
+        "resnet34",
+        "resnet50",
+        "mobilenet_v3_small",
+        "mobilenet_v3_large",
+        "maxvit_t",
+        "resnet101",
+        # "resnet150",
+    ]
+
+    assert dataset in datasets, f"{dataset} is not a valid option. Valid options: {datasets}"
+    assert backbone in backbones, f"{backbone} is not valid option. Valid options: {backbones}"
+
+    file_name = f"{backbone}_{dataset}.pt"
+    backbone_path = os.path.join(model_dir, file_name)
+    assert os.path.exists(backbone_path), (f"{backbone_path} does not exist. "
+                                           f"Please, ensure that the fine tuned model is available"
+                                           f" at the selected directory: {model_dir}")
+
+
+def get_instance(dataset, backbone,
+                 model_dir=os.path.join("instances", "finetuned_models"),
+                 batch_size=32):
+    _is_instance_valid(dataset, backbone, model_dir)
+
+    model = torch.load(os.path.join(model_dir, f"{backbone}_{dataset}.pt"),
+                       map_location="cpu",
+                       weights_only=False)
+    model.eval()
+
+    train, validation, test, n_classes = get_dataset(dataset, batch_size)
+
+    return {
+        "model": model,
+        "data": {
+            "train": train,
+            "validation": validation,
+            "test": test,
+            "n_classes": n_classes,
+            "batch_size": batch_size,
+        }
+    }
+
