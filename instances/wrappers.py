@@ -203,6 +203,20 @@ def _is_instance_valid(dataset, backbone, model_dir):
 def get_instance(dataset, backbone,
                  model_dir=os.path.join("instances", "finetuned_models"),
                  batch_size=32):
+    """
+    Wrapper to load a dataset and a fine-tuned model.
+    Inputs:
+        - dataset: str -> name of the dataset
+        - backbone: str -> name of the backbone
+        - model_dir: str -> directory containing the fine-tuned model
+        - batch_size: int -> batch size
+    Outputs:
+        - dict -> dictionary containing the dataset and fine-tuned model
+        keys: - "model": Classifier -> fine-tuned model, loaded in CPU
+              - "data": dict -> keys "train", "validation", "test" -> data loader for each split,
+                                     "n_classes", "batch_size" -> useful metadata
+    """
+
     _is_instance_valid(dataset, backbone, model_dir)
 
     model = torch.load(os.path.join(model_dir, f"{backbone}_{dataset}.pt"),
