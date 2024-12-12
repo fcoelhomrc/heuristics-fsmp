@@ -81,14 +81,6 @@ class Classifier(nn.Module):
                 model.fc = nn.Identity()
                 return n_features, preprocess, model
 
-            case 'resnet152':
-                weights = models.ResNet152_Weights.IMAGENET1K_V1
-                preprocess = weights.transforms()
-                model = models.resnet152(weights=weights)
-                n_features = model.fc.in_features
-                model.fc = nn.Identity()
-                return n_features, preprocess, model
-
             case 'mobilenet_v3_small':
                 weights = models.MobileNet_V3_Small_Weights.IMAGENET1K_V1
                 preprocess = weights.transforms()
@@ -124,3 +116,5 @@ class Classifier(nn.Module):
             nn.Linear(self.n_hidden, self.n_classes),
         )
         return head
+
+
