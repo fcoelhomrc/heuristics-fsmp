@@ -26,6 +26,15 @@ class Evaluator():
         self.metric_params = metric_params
 
     def _get_metrics(self, y_true:pd.DataFrame, y_score:pd.DataFrame, y_pred:pd.DataFrame) -> dict:
+        if y_score.shape[1] == 2:
+            return {
+                "accuracy": accuracy_score(y_true, y_pred),
+                "precision": precision_score(y_true, y_pred),
+                "recall": recall_score(y_true, y_pred),
+                "f1": f1_score(y_true, y_pred),
+                "roc_auc": roc_auc_score(y_true, y_score[:,1])
+            }
+
         return {
             "accuracy": accuracy_score(y_true, y_pred),
             "precision": precision_score(y_true, y_pred, average=self.metric_params["average"]),
