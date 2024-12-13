@@ -65,7 +65,7 @@ def main():
         n_hidden=config["model"]["n_hidden"]
     )
     logger.info("dataset: %s, n_classes: %d, n_samples: %d, model: %s"
-                ,config["dataset"]["description"], n_classes, len(train), config["model"]["description"]
+                ,config["dataset"]["description"], n_classes, len(train.dataset), config["model"]["description"]
     )
 
     # get image features (training set)
