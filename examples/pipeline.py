@@ -64,13 +64,16 @@ def main():
         n_classes=n_classes,
         n_hidden=config["model"]["n_hidden"]
     )
+    logger.info("dataset: %s, n_classes: %d, n_samples: %d, model: %s"
+                ,config["dataset"]["description"], n_classes, len(train), config["model"]["description"]
+    )
 
     # get image features (training set)
     start_time = time.time()
     X_features_train, y_train = get_image_features(train, model)
 
     feature_extraction_time = time.time() - start_time
-    logger.info("Time spent on feature extraction: %.2f seconds (dataset: %s, model: %s)", feature_extraction_time, config["dataset"]["description"], config["model"]["description"])
+    logger.info("Time spent on feature extraction: %.2f seconds", feature_extraction_time)
 
     # run brkga
     if config["brkga"]["mode"] == "percent":

@@ -162,3 +162,67 @@
 2024-12-08 17:15:17 - recall (test set): 0.483758 (all features) / 0.468069 (randomly selected features)
 2024-12-08 17:15:17 - f1 (test set): 0.483144 (all features) / 0.464056 (randomly selected features)
 2024-12-08 17:15:17 - roc_auc (test set): 0.656609 (all features) / 0.635747 (randomly selected features)
+2024-12-12 11:19:29 - -----------------------------------------
+2024-12-12 11:38:21 - Time spent on feature extraction: 1123.27 seconds (dataset: cats_and_dogs, model: resnet34)
+2024-12-12 11:38:21 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-12 19:05:23 - Time spent on BRKGA: 26822.81 seconds (n_gen: 50)
+2024-12-12 19:05:24 - Best solution fitness: 0.034610 (metric: negative_log_likelihood)
+2024-12-12 19:05:24 - Number of selected features: 301 out of 512 (binary threshold: 0.3)
+2024-12-12 19:05:24 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 10:24:19 - -----------------------------------------
+2024-12-13 10:24:25 - dataset: cats_and_dogs, n_classes: 2, model: resnet18
+2024-12-13 10:33:21 - Time spent on feature extraction: 535.86 seconds
+2024-12-13 10:33:21 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 10:46:21 - Time spent on BRKGA: 780.13 seconds (n_gen: 2)
+2024-12-13 10:46:21 - Best solution fitness: 0.080142 (metric: negative_log_likelihood)
+2024-12-13 10:46:21 - Number of selected features: 373 out of 512 (binary threshold: 0.3)
+2024-12-13 10:46:21 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 10:50:31 - accuracy (test set): 0.963904 (all features) / 0.962409 (selected features)
+2024-12-13 10:50:31 - precision (test set): 0.952697 (all features) / 0.951058 (selected features)
+2024-12-13 10:50:31 - recall (test set): 0.976606 (all features) / 0.975330 (selected features)
+2024-12-13 10:50:31 - f1 (test set): 0.964503 (all features) / 0.963041 (selected features)
+2024-12-13 10:50:31 - roc_auc (test set): 0.995302 (all features) / 0.995563 (selected features)
+2024-12-13 10:50:31 - Randomly selected features have 275 (73.73%) in common with the selected features
+2024-12-13 10:51:54 - accuracy (test set): 0.963904 (all features) / 0.962836 (randomly selected features)
+2024-12-13 10:51:54 - precision (test set): 0.952697 (all features) / 0.951847 (randomly selected features)
+2024-12-13 10:51:54 - recall (test set): 0.976606 (all features) / 0.975330 (randomly selected features)
+2024-12-13 10:51:54 - f1 (test set): 0.964503 (all features) / 0.963445 (randomly selected features)
+2024-12-13 10:51:54 - roc_auc (test set): 0.995302 (all features) / 0.995428 (randomly selected features)
+2024-12-13 10:52:34 - -----------------------------------------
+2024-12-13 10:52:37 - dataset: brain_tumor, n_classes: 4, n_samples: 72, model: resnet18
+2024-12-13 10:53:51 - Time spent on feature extraction: 74.26 seconds
+2024-12-13 10:53:51 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 11:01:06 - Time spent on BRKGA: 434.87 seconds (n_gen: 2)
+2024-12-13 11:01:06 - Best solution fitness: 0.572035 (metric: negative_log_likelihood)
+2024-12-13 11:01:06 - Number of selected features: 385 out of 512 (binary threshold: 0.3)
+2024-12-13 11:01:06 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 11:01:27 - accuracy (test set): 0.352792 (all features) / 0.322335 (selected features)
+2024-12-13 11:01:27 - precision (test set): 0.405713 (all features) / 0.363248 (selected features)
+2024-12-13 11:01:27 - recall (test set): 0.353786 (all features) / 0.322424 (selected features)
+2024-12-13 11:01:27 - f1 (test set): 0.320836 (all features) / 0.299289 (selected features)
+2024-12-13 11:01:27 - roc_auc (test set): 0.631940 (all features) / 0.605378 (selected features)
+2024-12-13 11:01:27 - Randomly selected features have 286 (74.29%) in common with the selected features
+2024-12-13 11:01:35 - accuracy (test set): 0.352792 (all features) / 0.342640 (randomly selected features)
+2024-12-13 11:01:35 - precision (test set): 0.405713 (all features) / 0.413222 (randomly selected features)
+2024-12-13 11:01:35 - recall (test set): 0.353786 (all features) / 0.343855 (randomly selected features)
+2024-12-13 11:01:35 - f1 (test set): 0.320836 (all features) / 0.319637 (randomly selected features)
+2024-12-13 11:01:35 - roc_auc (test set): 0.631940 (all features) / 0.628896 (randomly selected features)
+2024-12-13 13:14:25 - -----------------------------------------
+2024-12-13 13:14:29 - dataset: letter_recognition, n_classes: 26, n_samples: 650, model: resnet34
+2024-12-13 13:32:11 - Time spent on feature extraction: 1062.26 seconds
+2024-12-13 13:32:11 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 16:19:21 - Time spent on BRKGA: 10029.53 seconds (n_gen: 2)
+2024-12-13 16:19:21 - Best solution fitness: 0.482217 (metric: negative_log_likelihood)
+2024-12-13 16:19:21 - Number of selected features: 366 out of 512 (binary threshold: 0.3)
+2024-12-13 16:19:21 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 16:23:18 - accuracy (test set): 0.138846 (all features) / 0.145000 (selected features)
+2024-12-13 16:23:18 - precision (test set): 0.151410 (all features) / 0.155599 (selected features)
+2024-12-13 16:23:18 - recall (test set): 0.138846 (all features) / 0.145000 (selected features)
+2024-12-13 16:23:18 - f1 (test set): 0.139400 (all features) / 0.145515 (selected features)
+2024-12-13 16:23:18 - roc_auc (test set): 0.639645 (all features) / 0.635744 (selected features)
+2024-12-13 16:23:18 - Randomly selected features have 261 (71.31%) in common with the selected features
+2024-12-13 16:25:24 - accuracy (test set): 0.138846 (all features) / 0.140385 (randomly selected features)
+2024-12-13 16:25:24 - precision (test set): 0.151410 (all features) / 0.145856 (randomly selected features)
+2024-12-13 16:25:24 - recall (test set): 0.138846 (all features) / 0.140385 (randomly selected features)
+2024-12-13 16:25:24 - f1 (test set): 0.139400 (all features) / 0.139755 (randomly selected features)
+2024-12-13 16:25:24 - roc_auc (test set): 0.639645 (all features) / 0.638732 (randomly selected features)
