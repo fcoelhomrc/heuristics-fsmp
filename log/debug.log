@@ -226,3 +226,107 @@
 2024-12-13 16:25:24 - recall (test set): 0.138846 (all features) / 0.140385 (randomly selected features)
 2024-12-13 16:25:24 - f1 (test set): 0.139400 (all features) / 0.139755 (randomly selected features)
 2024-12-13 16:25:24 - roc_auc (test set): 0.639645 (all features) / 0.638732 (randomly selected features)
+2024-12-13 18:25:09 - -----------------------------------------
+2024-12-13 18:25:15 - dataset: beans, n_classes: 3, n_samples: 1034, model: resnet18
+2024-12-13 18:25:48 - Time spent on feature extraction: 33.43 seconds
+2024-12-13 18:25:48 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 18:34:14 - Time spent on BRKGA: 505.91 seconds (n_gen: 15)
+2024-12-13 18:34:14 - Best solution fitness: 0.208237 (metric: negative_log_likelihood)
+2024-12-13 18:34:14 - Number of selected features: 333 out of 512 (binary threshold: 0.3)
+2024-12-13 18:34:22 - accuracy (test set): 0.492188 (all features) / 0.484375 (selected features)
+2024-12-13 18:34:22 - precision (test set): 0.498750 (all features) / 0.485320 (selected features)
+2024-12-13 18:34:22 - recall (test set): 0.491141 (all features) / 0.483573 (selected features)
+2024-12-13 18:34:22 - f1 (test set): 0.487465 (all features) / 0.481339 (selected features)
+2024-12-13 18:34:22 - roc_auc (test set): 0.671320 (all features) / 0.660199 (selected features)
+2024-12-13 18:34:22 - Randomly selected features have 218 (65.47%) in common with the selected features
+2024-12-13 18:34:25 - accuracy (test set): 0.492188 (all features) / 0.500000 (randomly selected features)
+2024-12-13 18:34:25 - precision (test set): 0.498750 (all features) / 0.514116 (randomly selected features)
+2024-12-13 18:34:25 - recall (test set): 0.491141 (all features) / 0.499262 (randomly selected features)
+2024-12-13 18:34:25 - f1 (test set): 0.487465 (all features) / 0.497664 (randomly selected features)
+2024-12-13 18:34:25 - roc_auc (test set): 0.671320 (all features) / 0.669492 (randomly selected features)
+2024-12-13 18:34:25 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 18:34:25 - Best solution array saved to './log/debug_best_solutions.csv' with column name 'beans_resnet18_imagenet_15'
+2024-12-13 18:38:19 - -----------------------------------------
+2024-12-13 18:38:25 - dataset: beans, n_classes: 3, n_samples: 1034, model: resnet18
+2024-12-13 18:39:02 - Time spent on feature extraction: 36.91 seconds
+2024-12-13 18:39:02 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 18:40:32 - Time spent on BRKGA: 90.57 seconds (n_gen: 2)
+2024-12-13 18:40:32 - Best solution fitness: 0.336340 (metric: negative_log_likelihood)
+2024-12-13 18:40:32 - Number of selected features: 346 out of 512 (binary threshold: 0.3)
+2024-12-13 18:40:39 - accuracy (test set): 0.523438 (all features) / 0.554688 (selected features)
+2024-12-13 18:40:39 - precision (test set): 0.527982 (all features) / 0.559343 (selected features)
+2024-12-13 18:40:39 - recall (test set): 0.523440 (all features) / 0.553894 (selected features)
+2024-12-13 18:40:39 - f1 (test set): 0.524051 (all features) / 0.550907 (selected features)
+2024-12-13 18:40:39 - roc_auc (test set): 0.674479 (all features) / 0.697239 (selected features)
+2024-12-13 18:40:39 - Randomly selected features have 245 (70.81%) in common with the selected features
+2024-12-13 18:40:43 - accuracy (test set): 0.523438 (all features) / 0.507812 (randomly selected features)
+2024-12-13 18:40:43 - precision (test set): 0.527982 (all features) / 0.518429 (randomly selected features)
+2024-12-13 18:40:43 - recall (test set): 0.523440 (all features) / 0.507383 (randomly selected features)
+2024-12-13 18:40:43 - f1 (test set): 0.524051 (all features) / 0.508175 (randomly selected features)
+2024-12-13 18:40:43 - roc_auc (test set): 0.674479 (all features) / 0.660385 (randomly selected features)
+2024-12-13 18:40:43 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 18:40:43 - Best solution array saved to './log/debug_best_solutions.csv' with column name 'beans_resnet18_imagenet_2'
+2024-12-13 19:20:00 - -----------------------------------------
+2024-12-13 19:20:02 - dataset: brain_tumor, n_classes: 4, n_samples: 2296, model: resnet18
+2024-12-13 19:21:21 - Time spent on feature extraction: 79.06 seconds
+2024-12-13 19:21:21 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-13 19:31:14 - Time spent on BRKGA: 592.46 seconds (n_gen: 2)
+2024-12-13 19:31:14 - Best solution fitness: 0.590984 (metric: negative_log_likelihood)
+2024-12-13 19:31:14 - Number of selected features: 355 out of 512 (binary threshold: 0.3)
+2024-12-13 19:31:37 - accuracy (test set): 0.352792 (all features) / 0.360406 (selected features)
+2024-12-13 19:31:37 - precision (test set): 0.384497 (all features) / 0.402454 (selected features)
+2024-12-13 19:31:37 - recall (test set): 0.354633 (all features) / 0.363959 (selected features)
+2024-12-13 19:31:37 - f1 (test set): 0.328329 (all features) / 0.342411 (selected features)
+2024-12-13 19:31:37 - roc_auc (test set): 0.636659 (all features) / 0.632894 (selected features)
+2024-12-13 19:31:37 - Randomly selected features have 245 (69.01%) in common with the selected features
+2024-12-13 19:31:45 - accuracy (test set): 0.352792 (all features) / 0.360406 (randomly selected features)
+2024-12-13 19:31:45 - precision (test set): 0.384497 (all features) / 0.397580 (randomly selected features)
+2024-12-13 19:31:45 - recall (test set): 0.354633 (all features) / 0.359606 (randomly selected features)
+2024-12-13 19:31:45 - f1 (test set): 0.328329 (all features) / 0.333961 (randomly selected features)
+2024-12-13 19:31:45 - roc_auc (test set): 0.636659 (all features) / 0.648490 (randomly selected features)
+2024-12-13 19:31:45 - Fitness history saved to './log/debug_history.csv'
+2024-12-13 19:31:45 - Best solution array saved to './log/debug_best_solutions.csv' with column name 'brain_tumor_resnet18_imagenet'
+2024-12-15 19:03:19 - -----------------------------------------
+2024-12-15 19:03:20 - dataset: brain_tumor, n_classes: 4, n_samples: 2296, model: resnet18
+2024-12-15 19:05:11 - Time spent on feature extraction: 110.42 seconds
+2024-12-15 19:05:11 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-15 19:22:32 - Time spent on BRKGA: 1041.31 seconds (n_gen: 2)
+2024-12-15 19:22:32 - Best solution fitness: 0.543856 (metric: negative_log_likelihood)
+2024-12-15 19:22:32 - Number of selected features: 353 out of 512 (binary threshold: 0.3)
+2024-12-15 19:22:58 - accuracy (test set): 0.365482 (all features) / 0.352792 (selected features)
+2024-12-15 19:22:58 - precision (test set): 0.409502 (all features) / 0.376498 (selected features)
+2024-12-15 19:22:58 - recall (test set): 0.362442 (all features) / 0.347840 (selected features)
+2024-12-15 19:22:58 - f1 (test set): 0.332975 (all features) / 0.323480 (selected features)
+2024-12-15 19:22:58 - roc_auc (test set): 0.625966 (all features) / 0.617084 (selected features)
+2024-12-15 19:22:58 - Randomly selected features have 245 (69.41%) in common with the selected features
+2024-12-15 19:23:07 - accuracy (test set): 0.365482 (all features) / 0.347716 (randomly selected features)
+2024-12-15 19:23:07 - precision (test set): 0.409502 (all features) / 0.388640 (randomly selected features)
+2024-12-15 19:23:07 - recall (test set): 0.362442 (all features) / 0.345230 (randomly selected features)
+2024-12-15 19:23:07 - f1 (test set): 0.332975 (all features) / 0.322659 (randomly selected features)
+2024-12-15 19:23:07 - roc_auc (test set): 0.625966 (all features) / 0.625799 (randomly selected features)
+2024-12-15 19:23:07 - Fitness history saved to './log/history/debug_brain_tumor_resnet18_imagenet.csv'
+2024-12-15 19:23:07 - Best solution array saved to './log/debug_best_solutions.csv' with column name 'brain_tumor_resnet18_imagenet'
+2024-12-15 19:23:08 - Random array saved to './log/debug_best_solutions.csv' with column name 'brain_tumor_resnet18_imagenet_random'
+2024-12-15 19:23:08 - Results for 'brain_tumor_resnet18_imagenet' saved to './log/debug_experiment_results.csv'
+2024-12-15 19:24:22 - -----------------------------------------
+2024-12-15 19:24:26 - dataset: beans, n_classes: 3, n_samples: 1034, model: resnet18
+2024-12-15 19:25:06 - Time spent on feature extraction: 40.22 seconds
+2024-12-15 19:25:06 - BRKGA parameters: n_elites: 128 / n_offsprings: 435 / n_mutants: 76 / bias: 0.70
+2024-12-15 19:26:48 - Time spent on BRKGA: 101.43 seconds (n_gen: 2)
+2024-12-15 19:26:48 - Best solution fitness: 0.423417 (metric: negative_log_likelihood)
+2024-12-15 19:26:48 - Number of selected features: 376 out of 512 (binary threshold: 0.3)
+2024-12-15 19:26:56 - accuracy (test set): 0.507812 (all features) / 0.453125 (selected features)
+2024-12-15 19:26:56 - precision (test set): 0.516285 (all features) / 0.456944 (selected features)
+2024-12-15 19:26:56 - recall (test set): 0.507198 (all features) / 0.452750 (selected features)
+2024-12-15 19:26:56 - f1 (test set): 0.507582 (all features) / 0.452763 (selected features)
+2024-12-15 19:26:56 - roc_auc (test set): 0.690710 (all features) / 0.641110 (selected features)
+2024-12-15 19:26:56 - Randomly selected features have 278 (73.94%) in common with the selected features
+2024-12-15 19:27:00 - accuracy (test set): 0.507812 (all features) / 0.484375 (randomly selected features)
+2024-12-15 19:27:00 - precision (test set): 0.516285 (all features) / 0.494708 (randomly selected features)
+2024-12-15 19:27:00 - recall (test set): 0.507198 (all features) / 0.483573 (randomly selected features)
+2024-12-15 19:27:00 - f1 (test set): 0.507582 (all features) / 0.481481 (randomly selected features)
+2024-12-15 19:27:00 - roc_auc (test set): 0.690710 (all features) / 0.666552 (randomly selected features)
+2024-12-15 19:27:00 - Fitness history saved to './log/history/debug_beans_resnet18_imagenet.csv'
+2024-12-15 19:27:00 - Best solution array saved to './log/debug_best_solutions.csv' with column name 'beans_resnet18_imagenet'
+2024-12-15 19:27:00 - Random array saved to './log/debug_best_solutions.csv' with column name 'beans_resnet18_imagenet_random'
+2024-12-15 19:27:00 - Results for 'beans_resnet18_imagenet' saved to './log/debug_experiment_results.csv'

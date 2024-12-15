@@ -18,7 +18,7 @@ eliminate_duplicates = false # true or false
 threshold_decoding = 0.3 # threshold for binary (select a feature or not)
 
 [optimization]
-n_gen = 15
+n_gen = 2
 fitness_function = "negative_log_likelihood" # ["negative_log_likelihood", "accuracy"]
 
 ##################################################################################
@@ -38,3 +38,10 @@ min_samples_leaf = [1, 5]
 list = ["accuracy", "precision", "recall", "f1", "roc_auc"]
 average = "macro" # ["micro", "macro", "weighted", "none"]
 multi_class = "ovr" # ["ovr", "ovo"]
+
+##################################################################################
+
+[file]
+history = "./log/history/debug_{name}.csv"
+best_solution = "./log/debug_best_solutions.csv"
+all_results = "./log/debug_experiment_results.csv"

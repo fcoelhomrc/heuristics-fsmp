@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from instances import wrappers, models
-from metaheuristics import brkga, evaluation
+from metaheuristics import brkga, evaluation, save
 
 
 # set up logging
@@ -41,14 +41,10 @@ def get_image_features(input_dataloader, model):
 
     return X_features, y
 
-def save_brkga_history_into_file(filename, res):
-    evaluations = np.array([e.evaluator.n_eval for e in res.history])
-    fitness_history = np.array([e.opt[0].F for e in res.history])
-
-    data = np.column_stack((evaluations, fitness_history)) # two arrays column-wise
-    np.savetxt(filename, data, delimiter=",", header="Number of function evaluations,Fitness history", comments="", fmt="%.6f")
-
-    logger.info("Fitness history saved to '%s'", filename)
+def log_comparison_results(results, feature_type):
+    for metric in results["all_features"]:
+        logger.info("%s (test set): %.6f (all features) / %.6f (%s features)",
+                    metric, results["all_features"][metric], results["selected_features"][metric], feature_type)
 
 def main():
 
@@ -75,11 +71,10 @@ def main():
     feature_extraction_time = time.time() - start_time
     logger.info("Time spent on feature extraction: %.2f seconds", feature_extraction_time)
 
-    # run brkga
+    ########### brkga
     if config["brkga"]["mode"] == "percent":
-        config["brkga"]["n_elites"] = int(config["brkga"]["n_elites"] * X_features_train.shape[1])
-        config["brkga"]["n_offsprings"] = int(config["brkga"]["n_offsprings"] * X_features_train.shape[1])
-        config["brkga"]["n_mutants"] = int(config["brkga"]["n_mutants"] * X_features_train.shape[1])
+        for key in ["n_elites", "n_offsprings", "n_mutants"]:
+            config["brkga"][key] = int(config["brkga"][key] * X_features_train.shape[1])
 
     logger.info("BRKGA parameters: n_elites: %d / n_offsprings: %d / n_mutants: %d / bias: %.2f",
                 config["brkga"]["n_elites"], config["brkga"]["n_offsprings"], config["brkga"]["n_mutants"], config["brkga"]["bias"])
@@ -101,41 +96,82 @@ def main():
 
     logger.info("Best solution fitness: %.6f (metric: %s)", res.F[0], config["optimization"]["fitness_function"])
     logger.info("Number of selected features: %d out of %d (binary threshold: %s)", len(selected_features), X_features_train.shape[1], config["brkga"]["threshold_decoding"])
-    save_brkga_history_into_file("./log/debug_history.csv", res)
 
     ########### check performance using the new subset of features
     # get image features (test set)
     X_features_test, y_test = get_image_features(test, model)
 
+    # instantiate classifiers
+    clf_all = RandomForestClassifier(random_state=19)
+    clf_selected = RandomForestClassifier(random_state=19)
+    clf_random_selected = RandomForestClassifier(random_state=19)
+
+    ev = evaluation.Evaluator(X_features_train, y_train, X_features_test, y_test, config["metrics"])
+
     # all features vs selected features
-    clf_all = RandomForestClassifier(random_state=19) # classifier using all features
-    clf_selected = RandomForestClassifier(random_state=19) # classifier using selected features
+    results = ev.compare_using_fit(clf_all, clf_selected, selected_features)
+    log_comparison_results(results, "selected")
 
-    ev = evaluation.Evaluator(
-        X_features_train, y_train,
-        X_features_test, y_test,
-        selected_features, config["metrics"]
-    )
-    results = ev.compare_using_fit(clf_all, clf_selected)
-    for metric in results["all_features"]:
-        logger.info("%s (test set): %.6f (all features) / %.6f (selected features)", metric, results["all_features"][metric], results["selected_features"][metric])
-
-    # all features vs randomly selected features
+    # select the same number of features randomly
     random_selected_features = np.sort(np.random.choice(X_features_train.shape[1], size=len(selected_features), replace=False))
     common_elements = np.intersect1d(selected_features, random_selected_features)
     logger.info("Randomly selected features have %d (%.2f%%) in common with the selected features", len(common_elements), len(common_elements)*100/len(selected_features))
 
-    clf_random_selected = RandomForestClassifier(random_state=19) # classifier using randomly selected features
+    # all features vs randomly selected features
+    results_random = ev.compare_using_fit(clf_all, clf_random_selected, random_selected_features)
+    log_comparison_results(results_random, "randomly selected")
 
-    ev = evaluation.Evaluator(
-        X_features_train, y_train,
-        X_features_test, y_test,
-        random_selected_features, config["metrics"]
-    )
-    results = ev.compare_using_fit(clf_all, clf_random_selected)
-    for metric in results["all_features"]:
-        logger.info("%s (test set): %.6f (all features) / %.6f (randomly selected features)", metric, results["all_features"][metric], results["selected_features"][metric])
+    ########### save results to file
+    config_name = config["dataset"]["description"]+"_"+config["model"]["description"]+"_imagenet"
 
+    save.brkga_history_to_file(config["file"]["history"].format(name=config_name), res)
+    logger.info("Fitness history saved to '%s'", config["file"]["history"].format(name=config_name))
+
+    save.brkga_best_solution_to_file(config["file"]["best_solution"], config_name, best_solution)
+    logger.info("Best solution array saved to '%s' with column name '%s'", config["file"]["best_solution"], config_name)
+
+    save.brkga_best_solution_to_file(config["file"]["best_solution"], config_name+"_random", random_selected_features)
+    logger.info("Random array saved to '%s' with column name '%s'", config["file"]["best_solution"], config_name+"_random")
+
+    results_dict = {
+        "dataset": config["dataset"]["description"],
+        "n_classes": n_classes,
+        "n_samples_train": len(train.dataset),
+        "model": config["model"]["description"],
+        "n_features_model": X_features_train.shape[1],
+        "weights": "imagenet",  # TODO
+        "time_elapsed_seconds_feature_extraction": feature_extraction_time,
+        "brkga_n_elites": config["brkga"]["n_elites"],
+        "brkga_n_offsprings": config["brkga"]["n_offsprings"],
+        "brkga_n_mutants": config["brkga"]["n_mutants"],
+        "brkga_bias": config["brkga"]["bias"],
+        "time_elapsed_seconds_brkga": brkga_time,
+        "stop_criterion_n_gen": config["optimization"]["n_gen"],
+        "brkga_fitness_function": config["optimization"]["fitness_function"],
+        "brkga_best_solution_fitness": res.F[0],
+        "brkga_threshold_decoding": config["brkga"]["threshold_decoding"],
+        "brkga_n_selected_features": len(selected_features),
+        "file_with_brkga_history": config["file"]["history"].format(name=config_name),
+        "file_with_brkga_best_solution": f"{config["file"]["best_solution"]}, column_name: {config_name}",
+        "classifier_for_comparison": "RandomForestClassifier",  # TODO
+        "accuracy_all": results["all_features"]["accuracy"],
+        "accuracy_selected": results["selected_features"]["accuracy"],
+        "accuracy_random": results_random["selected_features"]["accuracy"],
+        "f1_all": results["all_features"]["f1"],
+        "f1_selected": results["selected_features"]["f1"],
+        "f1_random": results_random["selected_features"]["f1"],
+        "precision_all": results["all_features"]["precision"],
+        "precision_selected": results["selected_features"]["precision"],
+        "precision_random": results_random["selected_features"]["precision"],
+        "recall_all": results["all_features"]["recall"],
+        "recall_selected": results["selected_features"]["recall"],
+        "recall_random": results_random["selected_features"]["recall"],
+        "roc_auc_all": results["all_features"]["roc_auc"],
+        "roc_auc_selected": results["selected_features"]["roc_auc"],
+        "roc_auc_random": results_random["selected_features"]["roc_auc"],
+    }
+    save.experiment_results_to_file(config["file"]["all_results"], results_dict)
+    logger.info("Results for '%s' saved to '%s'", config_name, config["file"]["all_results"])
 
 if __name__ == "__main__":
     logger.info("-----------------------------------------")
