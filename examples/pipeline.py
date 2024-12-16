@@ -1,24 +1,52 @@
 import os
 import sys
-import toml
 import time
+import logging
+import toml
 import numpy as np
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from metaheuristics import brkga, problems
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from instances import wrappers, models
+from metaheuristics import brkga, evaluation, save
 
 
+# set up logging
+logging.basicConfig(
+    filename="./log/debug.log", level=logging.INFO,
+    format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger()
+
+# config file
 with open("examples/config.toml", "r") as f:
     config = toml.load(f)
 
 
-def main():
+def get_image_features(input_dataloader, model):
 
-    start_time = time.time()
+    all_features = []
+    all_labels = []
+
+    for batch in input_dataloader:
+        image, label = batch["image"], batch["label"]
+        features = model.extract_features(image)
+
+        all_features.append(features.detach().cpu().numpy())
+        all_labels.append(label.detach().cpu().numpy())
+
+    X_features = np.vstack(all_features)  # (total_samples, n_features_model)
+    y = np.concatenate(all_labels)  # (total_samples,)
+
+    return X_features, y
+
+def log_comparison_results(results, feature_type):
+    for metric in results["all_features"]:
+        logger.info("%s (test set): %.6f (all features) / %.6f (%s features)",
+                    metric, results["all_features"][metric], results["selected_features"][metric], feature_type)
+
+def main():
 
     # load dataset
     train, validation, test, n_classes = wrappers.get_dataset(
@@ -32,100 +60,119 @@ def main():
         n_classes=n_classes,
         n_hidden=config["model"]["n_hidden"]
     )
+    logger.info("dataset: %s, n_classes: %d, n_samples: %d, model: %s"
+                ,config["dataset"]["description"], n_classes, len(train.dataset), config["model"]["description"]
+    )
 
     # get image features (training set)
-    all_features_train = []
-    all_labels_train = []
-    for batch in train:
-        image, label = batch["image"], batch["label"]
-        features = model.extract_features(image)
+    start_time = time.time()
+    X_features_train, y_train = get_image_features(train, model)
 
-        all_features_train.append(features.detach().cpu().numpy())
-        all_labels_train.append(label.detach().cpu().numpy())
+    feature_extraction_time = time.time() - start_time
+    logger.info("Time spent on feature extraction: %.2f seconds", feature_extraction_time)
 
-    X_features_train = np.vstack(all_features_train)  # (total_samples, n_features_model)
-    y_train = np.concatenate(all_labels_train)  # (total_samples,)
+    ########### brkga
+    if config["brkga"]["mode"] == "percent":
+        for key in ["n_elites", "n_offsprings", "n_mutants"]:
+            config["brkga"][key] = int(config["brkga"][key] * X_features_train.shape[1])
 
-    end_time_feature_extraction = time.time()
-    feature_extraction_time = end_time_feature_extraction - start_time
-    print(f"Time spent on feature extraction: {feature_extraction_time:.2f} seconds (dataset: {config["dataset"]["description"]}, model: {config["model"]["description"]})")
+    logger.info("BRKGA parameters: n_elites: %d / n_offsprings: %d / n_mutants: %d / bias: %.2f",
+                config["brkga"]["n_elites"], config["brkga"]["n_offsprings"], config["brkga"]["n_mutants"], config["brkga"]["bias"])
 
-    # define the feature selection problem
-    problem = problems.FeatureSelectionProblem(X_features_train, y_train, config["optimization"]["fitness_function"])
-
-    # run brkga
     start_time_brkga = time.time()
-
-    config["brkga"]["eliminate_duplicates"] = (problems.MyElementwiseDuplicateElimination()
-                                            if config["brkga"]["eliminate_duplicates"] else None)
-
     res = brkga.run_algorithm(
-        problem=problem,
+        X=X_features_train,
+        y=y_train,
         algorithm_params=config["brkga"],
         optimization_params=config["optimization"]
     )
 
-    end_time_brkga = time.time()
-    brkga_time = end_time_brkga - start_time_brkga
-    print(f"Time spent on BRKGA: {brkga_time:.2f} seconds (n_gen: {config["optimization"]["n_gen"]})")
+    brkga_time = time.time() - start_time_brkga
+    logger.info("Time spent on BRKGA: %.2f seconds (n_gen: %d)", brkga_time, config["optimization"]["n_gen"])
 
     # brkga output
-    best_solution_fitness = res.F
     best_solution = np.array(res.X)
-    selected_features = np.where(best_solution > 0.5)[0] # threshold for binary
+    selected_features = np.where(best_solution > config["brkga"]["threshold_decoding"])[0] # threshold for binary
 
-    print(f"\nBest solution fitness: {best_solution_fitness[0]} (metric: {config["optimization"]["fitness_function"]})")
-    print("Number of selected features:", len(selected_features))
-    # print("Selected features:", selected_features)
-    print("Total number of features:", X_features_train.shape[1])
-
-    # algorithm history
-    n_evals = np.array([e.evaluator.n_eval for e in res.history])
-    opt = np.array([e.opt[0].F for e in res.history])
-    print("Number of function evaluations:", n_evals)
-    print("Fitness history:", opt)
+    logger.info("Best solution fitness: %.6f (metric: %s)", res.F[0], config["optimization"]["fitness_function"])
+    logger.info("Number of selected features: %d out of %d (binary threshold: %s)", len(selected_features), X_features_train.shape[1], config["brkga"]["threshold_decoding"])
 
     ########### check performance using the new subset of features
-
     # get image features (test set)
-    all_features_test = []
-    all_labels_test = []
-    for batch in test:
-        image, label = batch["image"], batch["label"]
-        features = model.extract_features(image)
+    X_features_test, y_test = get_image_features(test, model)
 
-        all_features_test.append(features.detach().cpu().numpy())
-        all_labels_test.append(label.detach().cpu().numpy())
+    # instantiate classifiers
+    clf_all = RandomForestClassifier(random_state=19)
+    clf_selected = RandomForestClassifier(random_state=19)
+    clf_random_selected = RandomForestClassifier(random_state=19)
 
-    X_features_test = np.vstack(all_features_test)  # (total_samples, n_features_model)
-    y_test = np.concatenate(all_labels_test)  # (total_samples,)
+    ev = evaluation.Evaluator(X_features_train, y_train, X_features_test, y_test, config["metrics"])
 
-    # overview - number of features
-    print(f"\nAll features: X_train shape: {X_features_train.shape}, X_test shape: {X_features_test.shape}")
-    X_features_train_opt = np.take(X_features_train, selected_features, axis=1)
-    X_features_test_opt = np.take(X_features_test, selected_features, axis=1)
-    print(f"Selected features: X_train shape: {X_features_train_opt.shape}, X_test shape: {X_features_test_opt.shape}")
- 
-    # classifier using all features
-    clf_full = RandomForestClassifier()
-    clf_full.fit(X_features_train, y_train)
-    y_pred_proba_full = clf_full.predict_proba(X_features_test)
-    y_pred_full = clf_full.predict(X_features_test)
+    # all features vs selected features
+    results = ev.compare_using_fit(clf_all, clf_selected, selected_features)
+    log_comparison_results(results, "selected")
 
-    # classifier using selected features
-    clf_opt = RandomForestClassifier()
-    clf_opt.fit(X_features_train_opt, y_train)
-    y_pred_proba_opt = clf_opt.predict_proba(X_features_test_opt)
-    y_pred_opt = clf_opt.predict(X_features_test_opt)
+    # select the same number of features randomly
+    random_selected_features = np.sort(np.random.choice(X_features_train.shape[1], size=len(selected_features), replace=False))
+    common_elements = np.intersect1d(selected_features, random_selected_features)
+    logger.info("Randomly selected features have %d (%.2f%%) in common with the selected features", len(common_elements), len(common_elements)*100/len(selected_features))
 
-    # results - test set
-    print("\nTest set")
-    print(f"- Accuracy:\nAll features: {accuracy_score(y_test, y_pred_full)}\nSelected features: {accuracy_score(y_test, y_pred_opt)}")
-    print(f"- Precision:\nAll features: {precision_score(y_test, y_pred_full, average="macro")}\nSelected features: {precision_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- Recall:\nAll features: {recall_score(y_test, y_pred_full, average="macro")}\nSelected features: {recall_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- F1 Score:\nAll features: {f1_score(y_test, y_pred_full, average="macro")}\nSelected features: {f1_score(y_test, y_pred_opt, average="macro")}")
-    print(f"- ROC AUC:\nAll features: {roc_auc_score(y_test, y_pred_proba_full, average="macro", multi_class="ovr")}\nSelected features: {roc_auc_score(y_test, y_pred_proba_opt, average="macro", multi_class="ovr")}")
+    # all features vs randomly selected features
+    results_random = ev.compare_using_fit(clf_all, clf_random_selected, random_selected_features)
+    log_comparison_results(results_random, "randomly selected")
 
+    ########### save results to file
+    config_name = config["dataset"]["description"]+"_"+config["model"]["description"]+"_imagenet"
+
+    save.brkga_history_to_file(config["file"]["history"].format(name=config_name), res)
+    logger.info("Fitness history saved to '%s'", config["file"]["history"].format(name=config_name))
+
+    save.brkga_best_solution_to_file(config["file"]["best_solution"], config_name, best_solution)
+    logger.info("Best solution array saved to '%s' with column name '%s'", config["file"]["best_solution"], config_name)
+
+    save.brkga_best_solution_to_file(config["file"]["best_solution"], config_name+"_random", random_selected_features)
+    logger.info("Random array saved to '%s' with column name '%s'", config["file"]["best_solution"], config_name+"_random")
+
+    results_dict = {
+        "dataset": config["dataset"]["description"],
+        "n_classes": n_classes,
+        "n_samples_train": len(train.dataset),
+        "model": config["model"]["description"],
+        "n_features_model": X_features_train.shape[1],
+        "weights": "imagenet",  # TODO
+        "time_elapsed_seconds_feature_extraction": feature_extraction_time,
+        "brkga_n_elites": config["brkga"]["n_elites"],
+        "brkga_n_offsprings": config["brkga"]["n_offsprings"],
+        "brkga_n_mutants": config["brkga"]["n_mutants"],
+        "brkga_bias": config["brkga"]["bias"],
+        "time_elapsed_seconds_brkga": brkga_time,
+        "stop_criterion_n_gen": config["optimization"]["n_gen"],
+        "brkga_fitness_function": config["optimization"]["fitness_function"],
+        "brkga_best_solution_fitness": res.F[0],
+        "brkga_threshold_decoding": config["brkga"]["threshold_decoding"],
+        "brkga_n_selected_features": len(selected_features),
+        "file_with_brkga_history": config["file"]["history"].format(name=config_name),
+        "file_with_brkga_best_solution": f"{config["file"]["best_solution"]}, column_name: {config_name}",
+        "classifier_for_comparison": "RandomForestClassifier",  # TODO
+        "accuracy_all": results["all_features"]["accuracy"],
+        "accuracy_selected": results["selected_features"]["accuracy"],
+        "accuracy_random": results_random["selected_features"]["accuracy"],
+        "f1_all": results["all_features"]["f1"],
+        "f1_selected": results["selected_features"]["f1"],
+        "f1_random": results_random["selected_features"]["f1"],
+        "precision_all": results["all_features"]["precision"],
+        "precision_selected": results["selected_features"]["precision"],
+        "precision_random": results_random["selected_features"]["precision"],
+        "recall_all": results["all_features"]["recall"],
+        "recall_selected": results["selected_features"]["recall"],
+        "recall_random": results_random["selected_features"]["recall"],
+        "roc_auc_all": results["all_features"]["roc_auc"],
+        "roc_auc_selected": results["selected_features"]["roc_auc"],
+        "roc_auc_random": results_random["selected_features"]["roc_auc"],
+    }
+    save.experiment_results_to_file(config["file"]["all_results"], results_dict)
+    logger.info("Results for '%s' saved to '%s'", config_name, config["file"]["all_results"])
 
 if __name__ == "__main__":
+    logger.info("-----------------------------------------")
     main()
