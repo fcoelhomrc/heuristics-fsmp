@@ -58,6 +58,20 @@ class Evaluator():
             "selected_features": self._get_metrics(self.y_test, y_pred_proba_selected, y_pred_selected)
         }
 
+    def fit_predict_random(self, model_selected:BaseEstimator, selected_features:np.ndarray) -> dict:
+        X_train_selected = np.take(self.X_train_all, selected_features, axis=1)
+        X_test_selected = np.take(self.X_test_all, selected_features, axis=1)
+
+        # selected features
+        model_selected.fit(X_train_selected, self.y_train)
+        y_pred_proba_selected = model_selected.predict_proba(X_test_selected)
+        y_pred_selected = model_selected.predict(X_test_selected)
+
+        # calculate metrics
+        return {
+            "random_features": self._get_metrics(self.y_test, y_pred_proba_selected, y_pred_selected)
+        }
+
     def compare_using_grid_search_cv(self,
                                      model_all:BaseEstimator, model_selected:BaseEstimator,
                                      selected_features:np.ndarray, cv_params:dict, grid_params:dict
