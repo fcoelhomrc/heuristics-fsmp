@@ -1,0 +1,54 @@
+2024-12-24 17:19:10 - -----------------------------------------
+2024-12-24 17:19:14 - dataset: beans, n_classes: 3, n_samples: 1167, model: resnet18, weights: imagenet
+2024-12-24 17:19:23 - Time spent on feature extraction: 8.65 seconds
+2024-12-24 17:19:23 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
+2024-12-25 00:09:00 - Time spent on BRKGA: 24577.55 seconds (n_gen: 50)
+2024-12-25 00:09:00 - Best solution fitness: 0.520660 (metric: negative_log_likelihood)
+2024-12-25 00:09:00 - Number of selected features: 338 out of 512 (binary threshold: 0.3)
+2024-12-25 00:09:00 - Fitness history saved to './log_LW_RF/history/beans_resnet18_imagenet.csv'
+2024-12-25 00:09:00 - Best solution array saved to './log_LW_RF/best_solutions.csv' with column name 'beans_resnet18_imagenet'
+2024-12-25 00:09:00 - Results for 'beans_resnet18_imagenet' saved to './log_LW_RF/experiment_results.csv'
+2024-12-25 00:09:00 - -----------------------------------------
+2024-12-25 00:09:04 - dataset: beans, n_classes: 3, n_samples: 1167, model: resnet34, weights: imagenet
+2024-12-25 00:09:11 - Time spent on feature extraction: 7.29 seconds
+2024-12-25 00:09:11 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
+2024-12-25 06:53:02 - Time spent on BRKGA: 24230.89 seconds (n_gen: 50)
+2024-12-25 06:53:02 - Best solution fitness: 0.525594 (metric: negative_log_likelihood)
+2024-12-25 06:53:02 - Number of selected features: 361 out of 512 (binary threshold: 0.3)
+2024-12-25 06:53:02 - Fitness history saved to './log_LW_RF/history/beans_resnet34_imagenet.csv'
+2024-12-25 06:53:02 - Best solution array saved to './log_LW_RF/best_solutions.csv' with column name 'beans_resnet34_imagenet'
+2024-12-25 06:53:02 - Results for 'beans_resnet34_imagenet' saved to './log_LW_RF/experiment_results.csv'
+2024-12-25 06:53:02 - -----------------------------------------
+2024-12-25 06:53:05 - dataset: beans, n_classes: 3, n_samples: 1167, model: mobilenet_v3_small, weights: imagenet
+2024-12-25 06:53:12 - Time spent on feature extraction: 6.95 seconds
+2024-12-25 06:53:12 - BRKGA parameters: n_elites: 144 / n_offsprings: 345 / n_mutants: 86 / bias: 0.70
+2024-12-25 14:58:12 - Time spent on BRKGA: 29100.23 seconds (n_gen: 50)
+2024-12-25 14:58:12 - Best solution fitness: 0.497351 (metric: negative_log_likelihood)
+2024-12-25 14:58:12 - Number of selected features: 407 out of 576 (binary threshold: 0.3)
+2024-12-25 14:58:12 - Fitness history saved to './log_LW_RF/history/beans_mobilenet_v3_small_imagenet.csv'
+2024-12-25 14:58:12 - Best solution array saved to './log_LW_RF/best_solutions.csv' with column name 'beans_mobilenet_v3_small_imagenet'
+2024-12-25 14:58:12 - Results for 'beans_mobilenet_v3_small_imagenet' saved to './log_LW_RF/experiment_results.csv'
+2024-12-25 14:58:12 - -----------------------------------------
+2024-12-25 14:58:16 - dataset: beans, n_classes: 3, n_samples: 1167, model: maxvit_t, weights: imagenet
+2024-12-25 14:58:23 - Time spent on feature extraction: 7.87 seconds
+2024-12-25 14:58:23 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
+2024-12-25 21:38:15 - Time spent on BRKGA: 23991.43 seconds (n_gen: 50)
+2024-12-25 21:38:15 - Best solution fitness: 0.477188 (metric: negative_log_likelihood)
+2024-12-25 21:38:15 - Number of selected features: 333 out of 512 (binary threshold: 0.3)
+2024-12-25 21:38:15 - Fitness history saved to './log_LW_RF/history/beans_maxvit_t_imagenet.csv'
+2024-12-25 21:38:15 - Best solution array saved to './log_LW_RF/best_solutions.csv' with column name 'beans_maxvit_t_imagenet'
+2024-12-25 21:38:15 - Results for 'beans_maxvit_t_imagenet' saved to './log_LW_RF/experiment_results.csv'
+2024-12-25 21:38:15 - -----------------------------------------
+2024-12-25 21:38:17 - dataset: brain_tumor, n_classes: 4, n_samples: 2870, model: resnet18, weights: imagenet
+2024-12-25 21:38:52 - Time spent on feature extraction: 35.12 seconds
+2024-12-25 21:38:52 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
+2024-12-26 18:13:29 - Time spent on BRKGA: 74076.95 seconds (n_gen: 50)
+2024-12-26 18:13:29 - Best solution fitness: 0.610097 (metric: negative_log_likelihood)
+2024-12-26 18:13:29 - Number of selected features: 355 out of 512 (binary threshold: 0.3)
+2024-12-26 18:13:29 - Fitness history saved to './log_LW_RF/history/brain_tumor_resnet18_imagenet.csv'
+2024-12-26 18:13:29 - Best solution array saved to './log_LW_RF/best_solutions.csv' with column name 'brain_tumor_resnet18_imagenet'
+2024-12-26 18:13:29 - Results for 'brain_tumor_resnet18_imagenet' saved to './log_LW_RF/experiment_results.csv'
+2024-12-26 18:13:29 - -----------------------------------------
+2024-12-26 18:13:31 - dataset: brain_tumor, n_classes: 4, n_samples: 2870, model: resnet34, weights: imagenet
+2024-12-26 18:14:10 - Time spent on feature extraction: 39.26 seconds
+2024-12-26 18:14:10 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
