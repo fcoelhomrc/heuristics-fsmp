@@ -1,3 +1,4 @@
+import os
 import itertools
 import time
 import logging
@@ -46,11 +47,23 @@ def get_image_features(input_dataloader, model) -> tuple[np.ndarray, np.ndarray]
 
 def main(dataset_name, weights, model_name) -> None:
 
-    # load dataset
-    train, validation, test, n_classes = wrappers.get_dataset(name=dataset_name, batch_size=config["dataset"]["batch_size"])
+    # load dataset and model based on weights
+    if weights not in ["imagenet", "finetuned"]:
+        raise ValueError(f"Invalid weights: {weights}")
 
-    # load model
-    model = models.Classifier(backbone=model_name, n_classes=n_classes, n_hidden=config["model"]["n_hidden"])
+    if weights == "imagenet":
+        train, validation, test, n_classes = wrappers.get_dataset(name=dataset_name, batch_size=config["dataset"]["batch_size"])
+        model = models.Classifier(backbone=model_name, n_classes=n_classes, n_hidden=config["model"]["n_hidden"])
+    else:  # weights == "finetuned"
+        instance = wrappers.get_instance(
+            dataset_name, model_name, model_dir=os.path.join("instances", "finetuned_models"),
+            batch_size=config["dataset"]["batch_size"]
+        )
+        train, validation, test, n_classes = (
+            instance["data"]["train"], instance["data"]["validation"],
+            instance["data"]["test"], instance["data"]["n_classes"]
+        )
+        model = instance["model"]
 
     logger.info("dataset: %s, n_classes: %d, n_samples: %d, model: %s, weights: %s",
                 dataset_name, n_classes, len(train.dataset)+len(validation.dataset), model_name, weights)

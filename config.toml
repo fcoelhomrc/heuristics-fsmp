@@ -1,10 +1,10 @@
 [dataset]
-description = ["letter_recognition", "beans", "brain_tumor", "cifar", "cats_and_dogs"]
+description = ["beans", "brain_tumor", "cats_and_dogs", "letter_recognition", "cifar"]
 batch_size = 32
-weights = ["imagenet"] # ["imagenet", "finetuning"]
+weights = ["imagenet", "finetuned"]
 
 [model]
-description = ["resnet18", "resnet34", "resnet50", "resnet101", "resnet152", "mobilenet_v3_small", "mobilenet_v3_large", "maxvit_t"]
+description = ["resnet18", "resnet34", "mobilenet_v3_small", "maxvit_t"] # ["resnet50", "resnet101", "resnet152", "mobilenet_v3_large"]
 n_hidden = 128
 
 ##################################################################################
@@ -19,7 +19,7 @@ eliminate_duplicates = false # true or false
 threshold_decoding = 0.3 # threshold for binary (select a feature or not)
 
 [optimization]
-n_gen = 100
+n_gen = 150
 fitness_function = "negative_log_likelihood" # ["negative_log_likelihood", "accuracy"]
 
 ##################################################################################
