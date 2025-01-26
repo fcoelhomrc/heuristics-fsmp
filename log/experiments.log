@@ -224,10 +224,6 @@
 2025-01-24 14:38:38 - dataset: cats_and_dogs, n_classes: 2, n_samples: 18728, model: resnet18, weights: imagenet
 2025-01-24 14:41:02 - Time spent on feature extraction: 143.76 seconds
 2025-01-24 14:41:02 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
-2025-01-24 14:43:52 - -----------------------------------------
-2025-01-24 14:43:57 - dataset: cats_and_dogs, n_classes: 2, n_samples: 18728, model: mobilenet_v3_small, weights: imagenet
-2025-01-24 14:46:22 - Time spent on feature extraction: 144.96 seconds
-2025-01-24 14:46:22 - BRKGA parameters: n_elites: 144 / n_offsprings: 345 / n_mutants: 86 / bias: 0.70
 2025-01-25 05:18:22 - Time spent on BRKGA: 52640.50 seconds (n_gen: 150)
 2025-01-25 05:18:22 - Best solution fitness: 0.013748 (metric: negative_log_likelihood)
 2025-01-25 05:18:22 - Number of selected features: 288 out of 512 (binary threshold: 0.3)
@@ -238,6 +234,16 @@
 2025-01-25 05:18:27 - dataset: cats_and_dogs, n_classes: 2, n_samples: 18728, model: resnet34, weights: imagenet
 2025-01-25 05:20:05 - Time spent on feature extraction: 97.59 seconds
 2025-01-25 05:20:05 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
+2025-01-25 21:58:19 - Time spent on BRKGA: 59894.30 seconds (n_gen: 150)
+2025-01-25 21:58:19 - Best solution fitness: 0.005427 (metric: negative_log_likelihood)
+2025-01-25 21:58:19 - Number of selected features: 320 out of 512 (binary threshold: 0.3)
+2025-01-25 21:58:19 - Fitness history saved to './log/history/cats_and_dogs_resnet34_imagenet.csv'
+2025-01-25 21:58:19 - Best solution array saved to './log/best_solutions.csv' with column name 'cats_and_dogs_resnet34_imagenet'
+2025-01-25 21:58:19 - Results for 'cats_and_dogs_resnet34_imagenet' saved to './log/experiment_results.csv'
+2025-01-24 14:43:52 - -----------------------------------------
+2025-01-24 14:43:57 - dataset: cats_and_dogs, n_classes: 2, n_samples: 18728, model: mobilenet_v3_small, weights: imagenet
+2025-01-24 14:46:22 - Time spent on feature extraction: 144.96 seconds
+2025-01-24 14:46:22 - BRKGA parameters: n_elites: 144 / n_offsprings: 345 / n_mutants: 86 / bias: 0.70
 2025-01-25 15:59:11 - Time spent on BRKGA: 90768.69 seconds (n_gen: 150)
 2025-01-25 15:59:11 - Best solution fitness: 0.038798 (metric: negative_log_likelihood)
 2025-01-25 15:59:11 - Number of selected features: 332 out of 576 (binary threshold: 0.3)
@@ -248,12 +254,6 @@
 2025-01-25 15:59:18 - dataset: cats_and_dogs, n_classes: 2, n_samples: 18728, model: maxvit_t, weights: imagenet
 2025-01-25 16:01:27 - Time spent on feature extraction: 128.93 seconds
 2025-01-25 16:01:27 - BRKGA parameters: n_elites: 128 / n_offsprings: 307 / n_mutants: 76 / bias: 0.70
-2025-01-25 21:58:19 - Time spent on BRKGA: 59894.30 seconds (n_gen: 150)
-2025-01-25 21:58:19 - Best solution fitness: 0.005427 (metric: negative_log_likelihood)
-2025-01-25 21:58:19 - Number of selected features: 320 out of 512 (binary threshold: 0.3)
-2025-01-25 21:58:19 - Fitness history saved to './log/history/cats_and_dogs_resnet34_imagenet.csv'
-2025-01-25 21:58:19 - Best solution array saved to './log/best_solutions.csv' with column name 'cats_and_dogs_resnet34_imagenet'
-2025-01-25 21:58:19 - Results for 'cats_and_dogs_resnet34_imagenet' saved to './log/experiment_results.csv'
 2025-01-25 22:30:52 - Time spent on BRKGA: 23364.93 seconds (n_gen: 150)
 2025-01-25 22:30:52 - Best solution fitness: 0.004305 (metric: negative_log_likelihood)
 2025-01-25 22:30:52 - Number of selected features: 272 out of 512 (binary threshold: 0.3)
