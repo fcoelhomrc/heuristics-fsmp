@@ -21,7 +21,7 @@ def brkga_best_solution_to_file(filename, column_name, best_solution):
     df.to_csv(filename, index=False)
 
 def experiment_results_to_file(filename, results):
-    row_df = pd.DataFrame([results])
+    row_df = pd.DataFrame([results]) if isinstance(results, dict) else pd.DataFrame(results)
 
     if os.path.exists(filename):
         row_df.to_csv(filename, mode="a", header=False, index=False)

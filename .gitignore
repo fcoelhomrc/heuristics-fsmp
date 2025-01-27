@@ -1,3 +1,6 @@
 .idea/
 .venv/
 **/__pycache__/
+instances/finetuned_models/
+slurm*.err
+slurm*.out
